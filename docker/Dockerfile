@@ -1,0 +1,3 @@
+FROM php:7.3
+WORKDIR /src
+CMD php -S 0.0.0.0:8000
