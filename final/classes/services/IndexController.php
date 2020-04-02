@@ -8,17 +8,21 @@ class IndexController
   private $db;
 
   /** @var CustomerRepository */
-  private $repo;
+  private $customerRepo;
+
+  /** @var CustomerFactory */
+  private $customerFactory;
 
   /** @var Template */
   private $template;
 
 
-  public function __construct(Database $db, CustomerRepository $repo, Template $template)
+  public function __construct(Database $db, CustomerRepository $repo, CustomerFactory $customerFactory, Template $template)
   {
     $this->db = $db;
-    $this->repo = $repo;
+    $this->customerRepo = $repo;
     $this->template = $template;
+    $this->customerFactory = $customerFactory;
   }
 
 
@@ -30,10 +34,10 @@ class IndexController
       return;
     }
 
-    $customer = new Customer($data['customer']);
-    $this->repo->save($customer);
+    $customer = $this->customerFactory->create($data['customer']);
+    $this->customerRepo->save($customer);
 
-    header('Location: '.$target);
+    $this->redirect($target);
   }
 
 
@@ -41,17 +45,24 @@ class IndexController
   {
     if (!empty($data['id'])) {
       $customerId = (int) $data['id'];
-      $customer = $this->repo->get($customerId);
+      $customer = $this->customerRepo->get($customerId);
     } else {
       $customer = new Customer;
     }
 
 
     $this->template->setParams([
-      'customers' => $this->repo->findAll(),
+      'customers' => $this->customerRepo->findAll(),
       'default' => $customer,
     ]);
 
     $this->template->render('index.php');
+  }
+
+
+  private function redirect(string $target): void
+  {
+    header('Location: ' . $target);
+    exit;
   }
 }
