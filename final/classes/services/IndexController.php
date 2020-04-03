@@ -26,7 +26,7 @@ class IndexController
   }
 
 
-  public function process(array $data, string $target): void
+  public function process(array $data, string $urlThisPage): void
   {
     //$this->repo->init();
 
@@ -37,7 +37,7 @@ class IndexController
     $customer = $this->customerFactory->create($data['customer']);
     $this->customerRepo->save($customer);
 
-    $this->redirect($target);
+    $this->redirect($urlThisPage);
   }
 
 

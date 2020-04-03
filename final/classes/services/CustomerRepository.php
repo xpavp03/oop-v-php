@@ -8,7 +8,7 @@ class CustomerRepository
   private $db;
 
   /** @var string */
-  private $dataClassName = 'Customer';
+  private $dataClassName = Customer::class;
 
 
   public function __construct(Database $db)
