@@ -15,9 +15,9 @@ $autoloader->register();
 $db = new Database( __DIR__ . '/../db/database.sq3');
 $factory = new CustomerFactory;
 $repo = new CustomerRepository($db);
-$template = new Template(__DIR__ . '/templates');
+$templateEngine = new TemplateEngine(__DIR__ . '/templates');
 
 
-$app = new IndexController($db, $repo, $factory, $template);
+$app = new IndexController($repo, $factory, $templateEngine);
 $app->process($_POST, $_SERVER['PHP_SELF']);
 $app->render($_GET);

@@ -3,7 +3,7 @@
 class CustomerFactory
 {
 
-  public function create(array $data = null): Customer
+  public function createFromArray(array $data = null): Customer
   {
     $customer = new Customer;
 

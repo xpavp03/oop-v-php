@@ -1,3 +1,3 @@
-FROM php:7.3
+FROM php:8.3
 WORKDIR /src
 CMD php -S 0.0.0.0:8000

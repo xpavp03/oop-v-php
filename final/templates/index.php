@@ -1,9 +1,3 @@
-<!doctype html>
-<html>
-<head>
-  <title>final</title>
-</head>
-<body>
 
 <h1>Our Valued Customers</h1>
 
@@ -14,6 +8,7 @@
     <th></th>
   </tr>
   <?php
+  /** @var array $customers */
   /** @var Customer $customer */
   foreach ($customers as $customer):
     ?>
@@ -36,6 +31,3 @@
   <input type="hidden" name="customer[id]" value="<?= $default->id ?>">
   <input type="submit" name="save">
 </form>
-
-</body>
-</html>

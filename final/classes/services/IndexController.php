@@ -4,25 +4,12 @@ declare(strict_types=1);
 class IndexController
 {
 
-  /** @var Database */
-  private $db;
-
-  /** @var CustomerRepository */
-  private $customerRepo;
-
-  /** @var CustomerFactory */
-  private $customerFactory;
-
-  /** @var Template */
-  private $template;
-
-
-  public function __construct(Database $db, CustomerRepository $repo, CustomerFactory $customerFactory, Template $template)
+  public function __construct(
+    private readonly CustomerRepository $customerRepository,
+    private readonly CustomerFactory    $customerFactory,
+    private readonly TemplateEngine     $templateEngine,
+  )
   {
-    $this->db = $db;
-    $this->customerRepo = $repo;
-    $this->template = $template;
-    $this->customerFactory = $customerFactory;
   }
 
 
@@ -30,12 +17,12 @@ class IndexController
   {
     //$this->repo->init();
 
-    if (empty($data['save'])) {
+    if ($this->isFormSubmitted($data)) {
       return;
     }
 
-    $customer = $this->customerFactory->create($data['customer']);
-    $this->customerRepo->save($customer);
+    $customer = $this->customerFactory->createFromArray($data['customer']);
+    $this->customerRepository->save($customer);
 
     $this->redirect($urlThisPage);
   }
@@ -45,18 +32,18 @@ class IndexController
   {
     if (!empty($data['id'])) {
       $customerId = (int) $data['id'];
-      $customer = $this->customerRepo->get($customerId);
+      $customer = $this->customerRepository->get($customerId);
     } else {
       $customer = new Customer;
     }
 
 
-    $this->template->setParams([
-      'customers' => $this->customerRepo->findAll(),
+    $this->templateEngine->setParams([
+      'customers' => $this->customerRepository->findAll(),
       'default' => $customer,
     ]);
 
-    $this->template->render('index.php');
+    $this->templateEngine->render('index');
   }
 
 
@@ -65,4 +52,10 @@ class IndexController
     header('Location: ' . $target);
     exit;
   }
+
+
+    private function isFormSubmitted(array $data): bool
+    {
+        return empty($data['save']);
+    }
 }
